@@ -2,118 +2,113 @@ import tkinter as tk
 from tkinter import messagebox
 import re
 
-def limpiar_campos():
-    entry_nombres.delete(0, tk.END)
-    entry_apellidos.delete(0, tk.END)
-    entry_edad.delete(0, tk.END)
-    entry_estatura.delete(0, tk.END)
-    entry_telefono.delete(0, tk.END)
-    var_genero.set(0)
-
-def es_entero_valido(valor):
+def Enterovalido(valor):
     try:
         int(valor)
         return True
     except ValueError:
+        messagebox.showerror("Error Edad", "Valor de edad equivocado")
         return False
 
-def es_decimal_valido(valor):
+def DecimalValido(valor):
     try:
         float(valor)
         return True
     except ValueError:
         return False
 
-def es_entero_valido_de_10_digitos(valor):
+def Telefonovalido(valor):
     return valor.isdigit() and len(valor) == 10
 
-def es_texto_valido(valor):
-    return bool(re.match(r"^[a-zA-Z\s]+$", valor))
+def TextoValido(valor):
+    return bool(re.match("^[a-zA-Z\\s]+$", valor))
 
-def guardar_datos():
-    # obtener los datos de los campos
-    nombres = entry_nombres.get()
-    apellidos = entry_apellidos.get()
-    edad = entry_edad.get()
-    estatura = entry_estatura.get()
-    telefono = entry_telefono.get()  # Corregido: antes leía entry_estatura
+def borrar():
+    tbNombre.delete(0, tk.END)
+    tbApellidos.delete(0, tk.END)
+    tbEdad.delete(0, tk.END)
+    tbTelefono.delete(0, tk.END)
+    tbEstatura.delete(0, tk.END)
+    rbSeleccionGenero.set(0)
 
-    # obtener el genero seleccionado
+def guardar():
+    nombres = tbNombre.get()
+    apellidos = tbApellidos.get()
+    edad = tbEdad.get()
+    tel = tbTelefono.get()
+    estatura = tbEstatura.get()
     genero = ""
-    if var_genero.get() == 1:
-        genero = "Hombre"
-    elif var_genero.get() == 2:
-        genero = "Mujer"
 
-    # validar que los campos tengan el formato correcto
-    if (es_entero_valido(edad) and es_decimal_valido(estatura) and 
-        es_entero_valido_de_10_digitos(telefono) and es_texto_valido(nombres) and 
-        es_texto_valido(apellidos)):
+    if rbSeleccionGenero.get() == 1:
+        genero = "Masculino"
+    elif rbSeleccionGenero.get() == 2:
+        genero = "Femenino"
+    elif rbSeleccionGenero.get() == 3:
+        genero = "No Definido"
+
+    if (Enterovalido(edad) and DecimalValido(estatura) and
+        Telefonovalido(tel) and TextoValido(nombres) and
+        TextoValido(apellidos)):
         
-        # crear una cadena con los datos
-        datos = f"Nombres: {nombres}\nApellidos: {apellidos}\nEdad: {edad} años\nEstatura: {estatura} cm\nTelefono: {telefono}\nGenero: {genero}"
-
-        # guardar los datos en un archivo de texto
-        with open("datos.txt", "a") as archivo:
+        datos = "Nombre: " + nombres + "\n" + "Apellidos: " + apellidos + "\n" + "Edad: " + edad + "\n" + "Telefono: " + tel + "\n" + "Estatura: " + estatura + "\n" + "Genero: " + genero
+        
+        with open("Datos30_13Feb26.txt", "a") as archivo:
             archivo.write(datos + "\n\n")
-
-        # mostrar mensajes con los datos capturados 
-        messagebox.showinfo("Informacion", "Datos guardados con exito\n\n" + datos)
-
-        # limpiar los controles despues de guardados
-        limpiar_campos()
+            
+        messagebox.showinfo("Informacion", "Datos guardados correctamente\n" + datos)
     else:
-        messagebox.showerror("Error", "Por favor, ingrese datos validos en los campos.")
+        messagebox.showerror("Error", "Algunos de los campos tienen Formato equivocado")
 
-# crear la ventana principal
+# --- Configuración de la Ventana Principal ---
 ventana = tk.Tk()
-ventana.title("Formulario")
-ventana.geometry("400x500")
+ventana.configure(bg="pink")
+ventana.geometry("350x558")
+ventana.title("Actividad 814 Formulario de Registro Vr. 001")
 
-# crear variables para los radiobuttons
-var_genero = tk.IntVar()
+rbSeleccionGenero = tk.IntVar()
 
-# crear etiquetas y campos de entrada
-label_nombres = tk.Label(ventana, text="Nombres: ")
-label_nombres.pack()
-entry_nombres = tk.Entry(ventana)
-entry_nombres.pack()
+# --- Elementos de la Interfaz ---
+tk.Label(ventana, text="Nombre: ", font=("Segoe UI", 14, "bold")).pack(padx=16, pady=8)
+tbNombre = tk.Entry(ventana, width=35, justify="center")
+tbNombre.pack()
 
-label_apellidos = tk.Label(ventana, text="Apellidos: ")
-label_apellidos.pack()
-entry_apellidos = tk.Entry(ventana)
-entry_apellidos.pack()
+tk.Label(ventana, text="Apellidos: ", font=("Segoe UI", 14, "bold")).pack(padx=18, pady=8)
+tbApellidos = tk.Entry(ventana, width=35, justify="center")
+tbApellidos.pack()
 
-label_edad = tk.Label(ventana, text="Edad: ")
-label_edad.pack()
-entry_edad = tk.Entry(ventana)
-entry_edad.pack()
+tk.Label(ventana, text="Edad: ", font=("Segoe UI", 14, "bold")).pack(padx=10, pady=8)
+tbEdad = tk.Entry(ventana, width=10, justify="center")
+tbEdad.pack()
 
-label_estatura = tk.Label(ventana, text="Estatura (cm): ")
-label_estatura.pack()
-entry_estatura = tk.Entry(ventana)
-entry_estatura.pack()
+tk.Label(ventana, text="Estatura: ", font=("Segoe UI", 14, "bold")).pack(padx=18, pady=8)
+tbEstatura = tk.Entry(ventana, width=15, justify="center")
+tbEstatura.pack()
 
-label_telefono = tk.Label(ventana, text="Telefono: ")
-label_telefono.pack()
-entry_telefono = tk.Entry(ventana)
-entry_telefono.pack()
+tk.Label(ventana, text="Telefono: ", font=("Segoe UI", 14, "bold")).pack(padx=18, pady=8)
+tbTelefono = tk.Entry(ventana, width=35, justify="center")
+tbTelefono.pack()
 
-label_genero = tk.Label(ventana, text="Genero: ")
-label_genero.pack()
+# --- Radiobuttons de Género ---
+gb = tk.LabelFrame(ventana, text="Selecione un Genero", padx=10, pady=8)
+gb.pack(padx=16, pady=8)
 
-rb_hombre = tk.Radiobutton(ventana, text="Hombre", variable=var_genero, value=1)
-rb_hombre.pack()
+rbMasculino = tk.Radiobutton(gb, text="Masculino", value=1, variable=rbSeleccionGenero)
+rbMasculino.grid(column=1, row=1)
 
-rb_mujer = tk.Radiobutton(ventana, text="Mujer", variable=var_genero, value=2)
-rb_mujer.pack()
+rbFemenino = tk.Radiobutton(gb, text="Femenino", value=2, variable=rbSeleccionGenero)
+rbFemenino.grid(column=2, row=1)
 
-# boton para guardar datos
-btn_guardar = tk.Button(ventana, text="Guardar", command=guardar_datos)
-btn_guardar.pack()
+rbNoDefinido = tk.Radiobutton(gb, text="No Definido", value=3, variable=rbSeleccionGenero)
+rbNoDefinido.grid(column=3, row=1)
 
-# boton para borrar campos
-btn_borrar = tk.Button(ventana, text="Borrar campos", command=limpiar_campos)
-btn_borrar.pack()
+# --- Botones de Acción ---
+gb2 = tk.LabelFrame(ventana, text="")
+gb2.pack(padx=10, pady=8)
+
+btnBorrar = tk.Button(gb2, text="Borrar", width=18, padx=10, pady=8, command=borrar)
+btnBorrar.grid(column=2, row=1)
+
+btnGuardar = tk.Button(gb2, text="Guardar", width=18, padx=10, pady=8, command=guardar)
+btnGuardar.grid(column=1, row=1)
 
 ventana.mainloop()

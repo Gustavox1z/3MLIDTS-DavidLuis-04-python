@@ -1,0 +1,7 @@
+Nombre: David Gustavo
+Apellidos: Luis Luna
+Edad: 19
+Telefono: 2241042726
+Estatura: 1.74
+Genero: Masculino
+
