@@ -63,7 +63,7 @@ def guardar():
 ventana = tk.Tk()
 ventana.configure(bg="pink")
 ventana.geometry("350x558")
-ventana.title("Actividad 814 Formulario de Registro Vr. 001")
+ventana.title("Actividad 04 Formulario de Registro Vr. 0002")
 
 rbSeleccionGenero = tk.IntVar()
 
