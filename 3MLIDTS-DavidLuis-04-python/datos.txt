@@ -12,3 +12,26 @@ Telefono: 2241042726
 Estatura: 1.74
 Genero: Masculino
 
+Nombre: David Gustavo
+Apellidos: Luis Luna
+Edad: 19
+Telefono: 2241042726
+Estatura: 1.74
+Genero: Masculino
+
+[2026-10-11 22:09:28]
+Nombre: David Gustavo
+Apellidos: Luis Luna
+Edad: 19
+Teléfono: 2241042726
+Estatura: 1.74 m
+Género: Masculino
+
+[2026-10-11 22:15:34]
+Nombre: David Gustavo
+Apellidos: Luis Luna
+Edad: 19
+Teléfono: 2241042726
+Estatura: 1.74 m
+Género: Masculino
+
