@@ -1,0 +1,14 @@
+Nombre: Luis Alberto
+Apellidos: Luis Luna
+Edad: 19
+Telefono: 2241042726
+Estatura: 1.73
+Genero: Masculino
+
+Nombre: Luis Alberto
+Apellidos: Luis Luna
+Edad: 15
+Telefono: 2241042726
+Estatura: 1.73
+Genero: Masculino
+

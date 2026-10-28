@@ -1,9 +1,33 @@
-#nueva version
 import tkinter as tk
 from tkinter import messagebox
 import re
+import mysql.connector # Para conectar con MySQL
 
-def Enterovalido(valor):
+def insertarRegistro(nombres, apellidos, edad, estatura, telefono, genero):
+    try:
+        # Conectar con la base de datos
+        conexion = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root", # Cambiar con tu usuario de MySQL si se personaliza
+            password="Davidpro#4659", # Reemplaza con tu contraseña de MySQL si se personaliza
+            database="formulario" # Reemplaza con el nombre de tu base de datos
+        )
+        cursor = conexion.cursor()
+        # Crear el query SQL para insertar el registro
+        query = "INSERT INTO registros (nombre, apellidos, telefono, estatura, edad, genero) VALUES (%s, %s, %s, %s, %s, %s)"
+        valores = (nombres, apellidos, telefono, estatura, edad, genero)
+        # Ejecutar el query
+        cursor.execute(query, valores)
+        # Guardar los cambios en la base de datos
+        conexion.commit()
+        # Cerrar la conexión
+        cursor.close()
+        conexion.close()
+        messagebox.showinfo("Información", "Datos guardados en la base de datos con éxito.")
+    except mysql.connector.Error as err:
+        messagebox.showerror("Error", f"Error al insertar los datos: {err}")
+
+def EnteroValido(valor):
     try:
         int(valor)
         return True
@@ -18,11 +42,11 @@ def DecimalValido(valor):
     except ValueError:
         return False
 
-def Telefonovalido(valor):
+def TelefonoValido(valor):
     return valor.isdigit() and len(valor) == 10
 
 def TextoValido(valor):
-    return bool(re.match("^[a-zA-Z\\s]+$", valor))
+    return bool(re.match("^[a-zA-Z\s]+$", valor))
 
 def borrar():
     tbNombre.delete(0, tk.END)
@@ -39,41 +63,35 @@ def guardar():
     tel = tbTelefono.get()
     estatura = tbEstatura.get()
     genero = ""
-
+    
     if rbSeleccionGenero.get() == 1:
         genero = "Masculino"
     elif rbSeleccionGenero.get() == 2:
         genero = "Femenino"
     elif rbSeleccionGenero.get() == 3:
         genero = "No Definido"
-
-    if (Enterovalido(edad) and DecimalValido(estatura) and
-        Telefonovalido(tel) and TextoValido(nombres) and
-        TextoValido(apellidos)):
         
-        datos = "Nombre: " + nombres + "\n" + "Apellidos: " + apellidos + "\n" + "Edad: " + edad + "\n" + "Telefono: " + tel + "\n" + "Estatura: " + estatura + "\n" + "Genero: " + genero
+    if(EnteroValido(edad) and DecimalValido(estatura) and TelefonoValido(tel) and TextoValido(nombres) and TextoValido(apellidos)):
+        datos = "Nombre: "+ nombres+"\n"+"Apellidos: "+ apellidos +"\n"+"Edad: "+edad+"\n"+"Telefono: "+ tel +"\n"+"Estatura: "+ estatura+"\n"+"Genero: "+ genero
         
-        with open("datos.txt", "a") as archivo:
-            archivo.write(datos + "\n\n")
-            
-        messagebox.showinfo("Informacion", "Datos guardados correctamente\n" + datos)
+        with open("Datos3N_13Feb26.txt","a") as archivo:
+            insertarRegistro(nombres, apellidos, edad, estatura, tel, genero)
+            archivo.write(datos+"\n\n")
+        messagebox.showinfo("Informacion", "Datos guardados correctamente \n"+datos)
     else:
-        messagebox.showerror("Error", "Algunos de los campos tienen Formato equivocado")
+        messagebox.showerror("Error", "Algunos de los campos tienen formato equivocado")
 
-# --- Configuración de la Ventana Principal ---
 ventana = tk.Tk()
 ventana.configure(bg="pink")
-ventana.geometry("350x558")
-ventana.title("Actividad 04 Formulario de Registro Vr. 0002")
-
+ventana.geometry("350x550")
+ventana.title("Actividad 04 Formulario de Registro Vr. 001")
 rbSeleccionGenero = tk.IntVar()
 
-# --- Elementos de la Interfaz ---
-tk.Label(ventana, text="Nombre: ", font=("Segoe UI", 14, "bold")).pack(padx=16, pady=8)
+tk.Label(ventana, text="Nombre: ", font=("Segoe UI", 14, "bold")).pack(padx=10, pady=8)
 tbNombre = tk.Entry(ventana, width=35, justify="center")
 tbNombre.pack()
 
-tk.Label(ventana, text="Apellidos: ", font=("Segoe UI", 14, "bold")).pack(padx=18, pady=8)
+tk.Label(ventana, text="Apellidos: ", font=("Segoe UI", 14, "bold")).pack(padx=10, pady=8)
 tbApellidos = tk.Entry(ventana, width=35, justify="center")
 tbApellidos.pack()
 
@@ -81,17 +99,16 @@ tk.Label(ventana, text="Edad: ", font=("Segoe UI", 14, "bold")).pack(padx=10, pa
 tbEdad = tk.Entry(ventana, width=10, justify="center")
 tbEdad.pack()
 
-tk.Label(ventana, text="Estatura: ", font=("Segoe UI", 14, "bold")).pack(padx=18, pady=8)
+tk.Label(ventana, text="Estatura: ", font=("Segoe UI", 14, "bold")).pack(padx=10, pady=8)
 tbEstatura = tk.Entry(ventana, width=15, justify="center")
 tbEstatura.pack()
 
-tk.Label(ventana, text="Telefono: ", font=("Segoe UI", 14, "bold")).pack(padx=18, pady=8)
+tk.Label(ventana, text="Telefono: ", font=("Segoe UI", 14, "bold")).pack(padx=10, pady=8)
 tbTelefono = tk.Entry(ventana, width=35, justify="center")
 tbTelefono.pack()
 
-# --- Radiobuttons de Género ---
-gb = tk.LabelFrame(ventana, text="Selecione un Genero", padx=10, pady=8)
-gb.pack(padx=16, pady=8)
+gb = tk.LabelFrame(ventana, text="Selecione un Genero: ", padx=10, pady=8)
+gb.pack(padx=10, pady=8)
 
 rbMasculino = tk.Radiobutton(gb, text="Masculino", value=1, variable=rbSeleccionGenero)
 rbMasculino.grid(column=1, row=1)
@@ -102,14 +119,13 @@ rbFemenino.grid(column=2, row=1)
 rbNoDefinido = tk.Radiobutton(gb, text="No Definido", value=3, variable=rbSeleccionGenero)
 rbNoDefinido.grid(column=3, row=1)
 
-# --- Botones de Acción ---
 gb2 = tk.LabelFrame(ventana, text="")
 gb2.pack(padx=10, pady=8)
 
-btnBorrar = tk.Button(gb2, text="Borrar", width=18, padx=10, pady=8, command=borrar)
-btnBorrar.grid(column=2, row=1)
-
-btnGuardar = tk.Button(gb2, text="Guardar", width=18, padx=10, pady=8, command=guardar)
+btnGuardar = tk.Button(gb2, text="Guardar", width=10, padx=10, pady=8, command=guardar)
 btnGuardar.grid(column=1, row=1)
+
+btnBorrar = tk.Button(gb2, text="Borrar", width=10, padx=10, pady=8, command=borrar)
+btnBorrar.grid(column=2, row=1)
 
 ventana.mainloop()
